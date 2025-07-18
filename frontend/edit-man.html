@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Men's Toilet Details</title>
+</head>
+<body>
+    <main>
+        <form method="post">
+            <fieldset class="edit-branch-container">
+                <legend>Edit Men's Toilet Details</legend>
+                <fieldset>
+                    <legend>Stalls</legend>
+                    <div class="component-container">
+                        <label for="stall-no">Number</label>
+                        <input type="number" name="stall-no">
+                    </div>
+                    <div class="component-container">
+                        <label for="toilet-status">Toilet Status</label>
+                        <div class="radio-container">
+                            <input type="radio" name="toilet-status" value="good"><label>All Good</label>
+                            <input type="radio" name="toilet-status" value="acceptable"><label>Minor Repairs needed</label>
+                            <input type="radio" name="toilet-status" value="bad"><label>Major Repairs Needed</label>
+                            <input type="radio" name="toilet-status" value="critical"><label>Replacement Needed</label>
+                        </div>
+                        <textarea name="toilet-details" id="toilet-details" class="status-details" placeholder="Insert status details here"></textarea>
+                    </div>
+                    <div class="component-container">
+                        <label for="bidet-status">Bidet Status</label>
+                        <div class="radio-container">
+                            <input type="radio" name="bidet-status" value="good"><label>All Good</label>
+                            <input type="radio" name="bidet-status" value="acceptable"><label>Minor Repairs needed</label>
+                            <input type="radio" name="bidet-status" value="bad"><label>Major Repairs Needed</label>
+                            <input type="radio" name="bidet-status" value="critical"><label>Replacement Needed</label>
+                        </div>
+                        <textarea name="bidet-details" id="bidet-details" class="status-details" placeholder="Insert status details here"></textarea>
+                    </div>
+                    <div class="component-container">
+                        <label for="toilet-paper-status">Toilet Paper Status</label>
+                        <div class="radio-container">
+                            <input type="radio" name="toilet-paper-status" value="good"><label>Full</label>
+                            <input type="radio" name="toilet-paper-status" value="acceptable"><label>Slightly Used</label>
+                            <input type="radio" name="toilet-paper-status" value="bad"><label>Almost Empty</label>
+                            <input type="radio" name="toilet-paper-status" value="critical"><label>Empty</label>
+                        </div>
+                        <textarea name="toilet-paper-details" id="toilet-paper-details" class="status-details" placeholder="Insert status details here"></textarea>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Urinals</legend>
+                    <div class="component-container">
+                        <label for="urinal-no">Number</label>
+                        <input type="number" name="urinal-no">
+                    </div>
+                    <div class="component-container">
+                        <label for="urinal-status">Urinal Status</label>
+                        <div class="radio-container">
+                            <input type="radio" name="urinal-status" value="good"><label>All Good</label>
+                            <input type="radio" name="urinal-status" value="acceptable"><label>Minor Repairs Needed</label>
+                            <input type="radio" name="urinal-status" value="bad"><label>Major Repairs Needed</label>
+                            <input type="radio" name="urinal-status" value="critical"><label>Replacement Needed</label>
+                        </div>
+                        <textarea name="urinal-details" id="urinal-details" class="status-details" placeholder="Insert status details here"></textarea>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Sinks</legend>
+                    <div class="component-container">
+                        <label for="sink-no">Number</label>
+                        <input type="number" name="sink-no">
+                    </div>
+                    <div class="component-container">
+                        <label for="tap-and-drain-status">State of Taps and Drains</label>
+                        <div class="radio-container">
+                            <input type="radio" name="tap-and-drain-status" value="good"><label>All Good</label>
+                            <input type="radio" name="tap-and-drain-status" value="acceptable"><label>Minor Repairs needed</label>
+                            <input type="radio" name="tap-and-drain-status" value="bad"><label>Major Repairs Needed</label>
+                            <input type="radio" name="tap-and-drain-status" value="critical"><label>Replacement Needed</label>
+                        </div>
+                        <textarea name="tap-and-drain-details" id="tap-and-drain-details" class="status-details" placeholder="Insert status details here"></textarea>
+                    </div>
+                    <div class="component-container">
+                        <label for="soap-status">Soap Status</label>
+                        <div class="radio-container">
+                            <input type="radio" name="soap-status" value="good"><label>Full</label>
+                            <input type="radio" name="soap-status" value="acceptable"><label>Slightly Used</label>
+                            <input type="radio" name="soap-status" value="bad"><label>Almost Empty</label>
+                            <input type="radio" name="soap-status" value="critical"><label>Empty</label>
+                        </div>
+                        <textarea name="soap-details" id="soap-details" class="status-details" placeholder="Insert status details here"></textarea>
+                    </div>
+                    <div class="component-container">
+                        <label for="paper-towel-status">Paper Towel Status</label>
+                        <div class="radio-container">
+                            <input type="radio" name="paper-towel-status" value="good"><label>Full</label>
+                            <input type="radio" name="paper-towel-status" value="acceptable"><label>Slightly Used</label>
+                            <input type="radio" name="paper-towel-status" value="bad"><label>Almost Empty</label>
+                            <input type="radio" name="paper-towel-status" value="critical"><label>Empty</label>
+                        </div>
+                        <textarea name="paper-towel-details" id="paper-towel-details" class="status-details" placeholder="Insert status details here"></textarea>
+                    </div>
+                </fieldset>
+            </fieldset>
+            <button type="submit" class="submit-btn">Save Changes</button>
+        </form>
+    </main>
+</body>
+</html>

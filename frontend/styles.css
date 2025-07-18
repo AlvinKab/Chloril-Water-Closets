@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Antic+Didone&family=Forum&family=Urbanist:ital,wght@0,100..900;1,100..900&family=Yanone+Kaffeesatz:wght@200..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    background-image: linear-gradient(125deg, #26D9E6 0%, #26D9E6 15%, #F5D72C 15%, #F5D72C 20%, #CCCCCC 20%, #CCCCCC 80%, #F5D72C 80%, #F5D72C 85%, #26D9E6 85%, #26D9E6 100%);
+    background-color: #CCCCCC; /* Fallback */
+    text-align: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: Forum, Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.3rem;
+}
+
+header {
+    background-image: linear-gradient(60deg, #26D9E6 0%, #26D9E6 25%, #F5D72C 25%, #F5D72C 30%, #CCCCCC 30%, #CCCCCC 100%);
+    height: 10vh;
+    width: 100%;
+    z-index: 1;
+    position: sticky;
+    top: 0;
+    padding: 10px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 2vh 0;
+}
+
+a {
+    text-decoration: none;
+    color: #004040;
+    position: relative;
+}
+
+nav a::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    transition: width 0.2s;
+    background-color: #004040;
+    content: '';
+    height: 2px;
+}
+
+nav a:hover:after {
+    width: 100%;
+}
+
+main {
+    padding: 0 200px 0;
+    min-height: 85vh;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.homepage {
+    padding: 200px;
+}
+
+h1 {
+    font-size: 5rem;
+    font-family: 'Antic Didone', Georgia, 'Times New Roman', Times, serif;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+}
+
+.login-form {
+    width: 40%;
+}
+
+fieldset {
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #DDDDDD;
+    font-size: 1.4rem;
+}
+
+legend {
+    font-size: 1.8rem;
+    background-color: #DDDDDD;
+    border-radius: 4px;
+    border: 2px gray solid;
+    padding: 5px;
+}
+
+label {
+    margin: 10px 0 10px;
+}
+
+input,
+textarea {
+    border: 2px gray solid;
+    border-radius: 2px;
+    width: 90%;
+    height: 40px;
+    margin: 10px 0 10px;
+    font-size: 1.2rem;
+    font-family: Urbanist, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button {
+    padding: 7px;
+    width: 150px;
+    height: 30px;
+    border-radius: 2px;
+    border: none;
+    margin: 10px;
+    box-shadow: 5px 5px 2.5px #CCCCCC;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: bold;
+    font-family: 'Yanone Kaffeesatz', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.submit-btn,
+.login-btn {
+    background-image: linear-gradient(to bottom right, cyan, gold);
+}
+
+.add-btn {
+    background-image: linear-gradient(to bottom right, #ADAD9B, gold);
+}
+
+.submit-btn {
+    height: 60px;
+}
+
+button:hover {
+    animation-name: hover;
+    animation-duration: 0.2s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+button:active {
+    animation-name: click;
+    animation-duration: 0.2s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes hover {
+    0% {scale: 1;}
+    100% {scale: 1.1;}
+}
+
+@keyframes click {
+    0% {transform: translateY(0px);}
+    100% {
+        transform: translateY(5px);
+        box-shadow: none;
+    }
+}
+
+table,
+tr,
+th,
+td {
+    background-color: #DDDDDD;
+    padding: 10px;
+    margin: 20px;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+table {
+    font-size: 1.4rem;
+    width: 100%;
+}
+
+th {
+    background-color: #ADAD9B;
+}
+
+.warning-container {
+    display: none;
+}
+
+.add-branch-container {
+    display: flex;
+}
+
+.add-branch-section {
+    margin: 5px;
+}
+
+.edit-branch-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.component-container {
+    display: flex;
+}
+
+.radio-container {
+    border-image: linear-gradient(to bottom right, #004040, gold) 1;
+    height: 60px;
+    margin: 5px;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    body {
+        background-image: linear-gradient(125deg, #26D9E6 0%, #26D9E6 15%, #F5D72C 15%, #F5D72C 20%, #333333 20%, #333333 80%, #F5D72C 80%, #F5D72C 85%, #26D9E6 85%, #26D9E6 100%);
+        background-color: #333333; /* Fallback */
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: #FFFFFF;
+    }
+
+    header {
+        background-image: linear-gradient(60deg, #26D9E6 0%, #26D9E6 25%, #F5D72C 25%, #F5D72C 30%, #333333 30%, #333333 100%);
+    }
+
+    a {
+        color: #00B0B0;
+    }
+
+    nav a::after {
+        background-color: #00B0B0;
+    }
+
+    fieldset,
+    legend {
+        background-color: #222222;
+    }
+
+    button {
+        box-shadow: 5px 5px 2.5px #333333;
+    }
+
+    button a {
+        color: #004040;
+    }
+
+    table {
+        color: #000000;
+    }
+}
+
+@media screen and (max-aspect-ratio: 1/1) {
+    .warning-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(30, 30, 30, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .warning-popup {
+        background-color: #FFFFFF;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        animation-name: popup;
+        animation-duration: 0.4s;
+        animation-timing-function: ease-out;
+        animation-iteration-count: 1;
+    }
+
+    @keyframes popup {
+        0% {transform: translateY(-1000px);}
+        100% {transform: translateY(0px);}
+    }
+    
+    .close-popup-btn {
+        box-shadow: none;
+        background-image: linear-gradient(to bottom right, #222222 75%, #DDDDDD 100%);
+        color: #FFFFFF;
+    }
+    
+    @media screen and (prefers-color-scheme: dark) {
+        .warning-container {
+            background-color: rgba(226, 226, 226, 0.4);
+        }
+        
+        .warning-popup {
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+        
+        .close-popup-btn {
+            background-image: linear-gradient(to bottom right, #DDDDDD 75%, #222222 100%);
+            color: #000000;
+        }
+    }
+}
