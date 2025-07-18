@@ -92,6 +92,7 @@ fieldset {
     border-radius: 4px;
     background-color: #DDDDDD;
     font-size: 1.4rem;
+    margin: 10px;
 }
 
 legend {
@@ -212,10 +213,29 @@ th {
     display: flex;
 }
 
+.component-container label {
+    margin-right: 5px;
+    width: 25%;
+}
+
+.component-container textarea {
+    height: 60px;
+}
+
 .radio-container {
     border-image: linear-gradient(to bottom right, #004040, gold) 1;
-    height: 60px;
+    border: 1px solid;
     margin: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 0.7rem;
+    padding: 3px;
+    border-radius: 4px;
+    width: 45%;
+}
+
+.radio-container input {
+    width: 15px;
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -293,6 +313,14 @@ th {
         box-shadow: none;
         background-image: linear-gradient(to bottom right, #222222 75%, #DDDDDD 100%);
         color: #FFFFFF;
+    }
+
+    .add-branch-container {
+        flex-direction: column;
+    }
+
+    .radio-container {
+        flex-flow: column;
     }
     
     @media screen and (prefers-color-scheme: dark) {
