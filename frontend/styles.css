@@ -108,7 +108,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
     border: 2px gray solid;
     border-radius: 2px;
     width: 90%;
@@ -220,11 +221,12 @@ th {
 
 .component-container textarea {
     height: 60px;
+    width: auto;
 }
 
 .radio-container {
-    border-image: linear-gradient(to bottom right, #004040, gold) 1;
     border: 1px solid;
+    border-image: linear-gradient(to bottom right, #004040, gold) 1;
     margin: 5px;
     display: flex;
     align-items: center;
@@ -319,8 +321,13 @@ th {
         flex-direction: column;
     }
 
-    .radio-container {
+    .component-container {
         flex-flow: column;
+    }
+
+    .component-container label,
+    .radio-container {
+        width: 90%;
     }
     
     @media screen and (prefers-color-scheme: dark) {
