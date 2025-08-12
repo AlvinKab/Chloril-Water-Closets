@@ -107,6 +107,10 @@ label {
     margin: 10px 0 10px;
 }
 
+label .mandatory {
+    color: red;
+}
+
 input,
 textarea,
 select {
@@ -134,7 +138,11 @@ button {
 }
 
 .submit-btn,
-.login-btn {
+.login-btn,
+.men-btn,
+.women-btn,
+.edit-btn,
+.change-pass-btn {
     background-image: linear-gradient(to bottom right, cyan, gold);
 }
 
@@ -144,6 +152,11 @@ button {
 
 .submit-btn {
     height: 60px;
+}
+
+.delete-btn {
+    background-color: red; /* Fallback */
+    background-image: linear-gradient(to bottom right, red, gold);
 }
 
 button:hover {
@@ -193,7 +206,69 @@ th {
     background-color: #ADAD9B;
 }
 
-.warning-container {
+
+.popup::backdrop {
+    background-color: rgba(30, 30, 30, 0.4);
+}
+
+.popup {
+    background-color: #FFFFFF;
+    padding: 10px;
+    width: 40%;
+    height: 40%;
+    border-width: 2px;
+    border-radius: 4px;
+    position: fixed;
+    z-index: 1;
+    top: 30%;
+    left: 30%;
+    animation-name: popup;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-iteration-count: 1;
+}
+
+.popup .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.popup .container img {
+    width: 40%;
+    height: 50%;
+}
+
+.popup-button-container {
+ 	display: flex;
+  	max-width: 100%;
+}
+
+@keyframes popup {
+    0% {transform: translateY(-1000px);}
+    100% {transform: translateY(0px);}
+}
+
+.close-popup-btn,
+.cancel-btn {
+    box-shadow: none;
+    background-image: linear-gradient(to bottom right, #222222 75%, #DDDDDD 100%);
+    color: #FFFFFF;
+}
+
+.confirm-btn {
+    box-shadow: none;
+    background-image: linear-gradient(to bottom right, #FF0000 75%, #DDDDDD 100%);
+    color: #000000;
+}
+
+.popup.ratio {
     display: none;
 }
 
@@ -278,43 +353,36 @@ th {
     table {
         color: #000000;
     }
+
+    .popup::backdrop {
+        background-color: rgba(226, 226, 226, 0.4);
+    }
+
+    .popup {
+        background-color: #000000;
+        color: #FFFFFF;
+    }
+
+    .close-popup-btn,
+    .cancel-btn {
+        background-image: linear-gradient(to bottom right, #DDDDDD 75%, #222222 100%);
+        color: #000000;
+    }
 }
 
 @media screen and (max-aspect-ratio: 1/1) {
-    .warning-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(30, 30, 30, 0.4);
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    button {
+        padding: 3.5px;
+        width: 75px;
+        height: 15px;
+        border-radius: 1px;
+        margin: 5px;
+        box-shadow: 2.5px 2.5px 1.25px #CCCCCC;
+        font-size: 0.6rem;
     }
-    
-    .warning-popup {
-        background-color: #FFFFFF;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        animation-name: popup;
-        animation-duration: 0.4s;
-        animation-timing-function: ease-out;
-        animation-iteration-count: 1;
-    }
-
-    @keyframes popup {
-        0% {transform: translateY(-1000px);}
-        100% {transform: translateY(0px);}
-    }
-    
-    .close-popup-btn {
-        box-shadow: none;
-        background-image: linear-gradient(to bottom right, #222222 75%, #DDDDDD 100%);
-        color: #FFFFFF;
+  
+  	.popup {
+        font-size: 0.5rem;
     }
 
     .add-branch-container {
@@ -328,21 +396,5 @@ th {
     .component-container label,
     .radio-container {
         width: 90%;
-    }
-    
-    @media screen and (prefers-color-scheme: dark) {
-        .warning-container {
-            background-color: rgba(226, 226, 226, 0.4);
-        }
-        
-        .warning-popup {
-            background-color: #000000;
-            color: #FFFFFF;
-        }
-        
-        .close-popup-btn {
-            background-image: linear-gradient(to bottom right, #DDDDDD 75%, #222222 100%);
-            color: #000000;
-        }
     }
 }

@@ -14,7 +14,7 @@ const getOneBranch = async (req, res) => {
         if (!branch) {
             return res.status(404).json({ message: "Could not find specified branch." });
         }
-        return res.json(branch);
+        return res.status(200).json(branch);
     } catch(err) {
         res.status(500).json({ message: "An error occurred when retrieving specified branch." });
         console.error("Could not retrieve specified branch: " + err);
@@ -27,7 +27,7 @@ const getAllBranches = async (req, res) => {
         if (branches.length === 0) {
             return res.json({ message: "No branches added." });
         }
-        return res.json(branches);
+        return res.status(200).json(branches);
     } catch(err) {
         res.status(500).json({ message: "An error occurred when retrieving branches." });
         console.error("Could not retrieve branches: " + err);
@@ -39,6 +39,10 @@ const createBranch = async (req, res) => {
         const { branchName, menToiletStallNo, menToiletUrinalNo, menToiletSinkNo, womenToiletStallNo, womenToiletSinkNo } = req.body;
         if (!branchName || !menToiletStallNo || !menToiletUrinalNo || !menToiletSinkNo || !womenToiletStallNo || !womenToiletSinkNo) {
             return res.status(400).json({ message: "Missing info!" });
+        }
+
+        if (menToiletStallNo < 0 || menToiletUrinalNo < 0 || menToiletUrinalNo < 0 || womenToiletStallNo < 0 || womenToiletSinkNo < 0) {
+            return res.status(400).json({ message: "Numbers must be nonnegative." });
         }
 
         const existingBranch = await Branch.findOne({ branchName });
@@ -65,7 +69,7 @@ const createBranch = async (req, res) => {
     }
 }
 
-const updateBranch = async (req, res) => {
+const updateRevenue = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -73,21 +77,56 @@ const updateBranch = async (req, res) => {
             return res.status(400).json({ message: 'Invalid branch ID.' });
         }
 
-        const { branchRevenue, branchBudget } = req.body;
-        if (!branchRevenue || !branchBudget) {
+        const { branchRevenue } = req.body;
+        if (!branchRevenue) {
             return res.status(400).json({ message: "Missing info!" });
         }
+
         const branch = await Branch.findById(id).exec();
         if (!branch) {
             return res.status(404).json({ message: "Could not find branch." });
         }
 
         branch.branchRevenue = branchRevenue;
+
+        const savedBranch = await branch.save();
+        if (!savedBranch) {
+            return res.status(500).json({ message: "An error occurred when saving branch revenue." });
+        }
+        return res.status(200).json({ message: "Branch updated successfully." });
+    } catch(err) {
+        res.status(500).json({ message: "An error occurred when updating branch." });
+        console.error("Could not update branch: " + err);
+    }
+}
+
+const updateBudget = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid branch ID.' });
+        }
+
+        const { branchBudget } = req.body;
+        if (!branchBudget) {
+            return res.status(400).json({ message: "Missing info!" });
+        }
+
+        if (branchBudget < 0) {
+            return res.status(400).json({ message: "Budget must be nonnegative." });
+        }
+
+        const branch = await Branch.findById(id).exec();
+        if (!branch) {
+            return res.status(404).json({ message: "Could not find branch." });
+        }
+
         branch.branchBudget = branchBudget;
 
         const savedBranch = await branch.save();
         if (!savedBranch) {
-            return res.status(500).json({ message: "An error occurred when saving branch details." });
+            return res.status(500).json({ message: "An error occurred when saving branch budget." });
         }
         return res.status(200).json({ message: "Branch updated successfully." });
     } catch(err) {
@@ -134,7 +173,7 @@ const getTotalRevenue = async (req, res) => {
         if (!totalRevenue) {
             return res.status(500).json({ message: "An error occurred when calculating total revenue." });
         }
-        return res.json(totalRevenue);
+        return res.status(200).json(totalRevenue);
     } catch(err) {
         res.status(500).json({ message: "An error occurred when computing total revenue." });
         console.error("Could not compute total revenue: " + err);
@@ -154,11 +193,11 @@ const getTotalBudget = async (req, res) => {
         if (!totalBudget) {
             return res.status(500).json({ message: "An error occurred when calculating total budget." });
         }
-        return res.json(totalBudget);
+        return res.status(200).json(totalBudget);
     } catch(err) {
         res.status(500).json({ message: "An error occurred when computing total budget." });
         console.error("Could not compute total budget: " + err);
     }
 }
 
-export default { getOneBranch, getAllBranches, createBranch, updateBranch, deleteBranch, getTotalRevenue, getTotalBudget };
+export default { getOneBranch, getAllBranches, createBranch, updateRevenue, updateBudget, deleteBranch, getTotalRevenue, getTotalBudget };

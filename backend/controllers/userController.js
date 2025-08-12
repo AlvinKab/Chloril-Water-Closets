@@ -13,12 +13,12 @@ const login = async (req, res) => {
 
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(401).json({ error: 'Either the username or password is incorrect(one)' });
+            return res.status(401).json({ message: 'Either the username or password is incorrect.' });
         }
 
         const passwordComparison = await argon.verify(user.password, password);
         if (!passwordComparison) {
-            return res.status(401).json({ error: 'Either the username or password is incorrect(two)' });
+            return res.status(401).json({ message: 'Either the username or password is incorrect.' });
         }
 
         const payload = {
@@ -31,14 +31,14 @@ const login = async (req, res) => {
         jwt.sign(payload, secret, { expiresIn }, (error, token) => {
             if (error) {
                 console.error('Error signing token: ', error);
-                return res.status(500).json({ message: 'An error occurred during token generation' });
+                return res.status(500).json({ message: 'An error occurred during token generation.' });
             }
-            res.json({ token, id: user._id, role: user.role });
+            return res.status(200).json({ token, id: user._id, role: user.role });
         });
 
     } catch (err) {
         console.error('Error logging in: ', err);
-        res.status(500).json({ message: 'An error occured during attempted login' });
+        res.status(500).json({ message: 'An error occured during attempted login.' });
     }
 }
 
@@ -60,7 +60,7 @@ const register = async (req, res) => {
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ error: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists' });
         }
 
         const saltRounds = 10;
@@ -73,13 +73,45 @@ const register = async (req, res) => {
             return res.status(500).json({ message: 'An error occurred while adding user!' });
         }
 
-        res.status(201).json({ message: 'User added successfully' });
+        return res.status(201).json({ message: 'User added successfully' });
     } catch (err) {
         console.error('Error signing up: ', err);
         res.status(500).json({ message: 'An error occurred while adding user.' });
     }
 }
 */
+
+const getOneUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(401).json({ message: 'Invalid user ID.' });
+        }
+
+        const user = await User.findById(id).exec();
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        
+        return res.status(200).json(user);
+    } catch(err) {
+        console.error('Error getting user: ', err);
+        res.status(500).json({ message: 'An error occurred when getting specified user.' });
+    }
+}
+
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        if (!users) {
+            res.status(500).json({ message: 'Cannot load users.' }); // One has to be logged in to execute this function, thus the user array cannot be empty.
+        }
+        return res.status(200).json(users);
+    } catch(err) {
+        console.error('Error getting users: ', err);
+        res.status(500).json({ message: 'An error occurred when getting users.' });
+    }
+}
 
 const addUser = async (req, res) => {
     try {
@@ -98,7 +130,7 @@ const addUser = async (req, res) => {
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ error: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists.' });
         }
 
         const saltRounds = 10;
@@ -111,7 +143,7 @@ const addUser = async (req, res) => {
             return res.status(500).json({ message: 'An error occurred while adding user!' });
         }
 
-        res.status(201).json({ message: 'User added successfully' });
+        return res.status(201).json({ message: 'User added successfully.' });
     } catch (err) {
         console.error('Error signing up: ', err);
         res.status(500).json({ message: 'An error occurred while adding user.' });
@@ -127,7 +159,7 @@ const editUser = async (req, res) => {
         }
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: 'Invalid user ID' });
+            return res.status(400).json({ message: 'Invalid user ID.' });
         }
 
         const user = await User.findById(id).exec();
@@ -181,7 +213,7 @@ const changeOwnUserPassword = async (req, res) => {
         if (!changedUserPass) {
             return res.status(500).json({ message: 'An error occurred when saving changed user password.' });
         }
-        return res.status(200).json({ message: `User password for user ${reqID} changed successfully.` });
+        return res.status(200).json({ message: `Password changed successfully.` });
     } catch(err) {
         console.error('Error updating user password: ', err);
         res.status(500).json({ message: 'An error occurred while updating user password.' });
@@ -220,7 +252,7 @@ const changeUserPasswordAsAdmin = async (req, res) => {
         if (!changedUserPass) {
             return res.status(500).json({ message: 'An error occurred when saving changed user password.' });
         }
-        return res.status(200).json({ message: `User password for user ${id} changed successfully.` });
+        return res.status(200).json({ message: `User password for user ${user.username} changed successfully.` });
     } catch(err) {
         console.error('Error updating user password: ', err);
         res.status(500).json({ message: 'An error occurred while updating user password.' });
@@ -232,7 +264,7 @@ const deleteUser = async (req, res) => {
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: 'Invalid user ID' });
+            return res.status(400).json({ message: 'Invalid user ID.' });
         }
 
         const user = await User.findById(id).exec();
@@ -244,7 +276,7 @@ const deleteUser = async (req, res) => {
         if (!deletedUser) {
             return res.status(500).json({ message: 'An error occurred when deleting user!' });
         }
-        return res.status(201).json({ message: 'User deleted successfully.' });
+        return res.status(200).json({ message: 'User deleted successfully.' });
         
     } catch(err) {
         console.error('Could not delete user: ', err);
@@ -252,4 +284,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-export default { login, /* register,*/ addUser, editUser, changeOwnUserPassword, changeUserPasswordAsAdmin, deleteUser };
+export default { login, /* register,*/ getOneUser, getAllUsers, addUser, editUser, changeOwnUserPassword, changeUserPasswordAsAdmin, deleteUser };

@@ -4,21 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="Chloril Water Closets logo.png">
     <title>Edit User</title>
 </head>
 <body>
     <main>
-        <form method="post" class="login-form">
+        <form method="post" class="login-form" id="edit-user-form">
             <fieldset>
                 <legend>Edit User Details</legend>
                 <label for="user">Username</label>
-                <input type="text" name="user">
+                <input type="text" name="user" id="user" required>
                 <label for="email">Email</label>
-                <input type="email" name="email">
-                <button type="submit" class="login-btn">Log In</button>
+                <input type="email" name="email" id="email" required>
+                <button type="submit" class="login-btn">Save details</button>
             </fieldset>
         </form>
+        <dialog class="popup" id="login-warning-popup" closedby="any">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Access Denied">
+                <p>You do not have permission to view this page.</p>
+                <button class="close-popup-btn" id="close-login-popup-btn">Close</button>
+            </div>
+        </dialog>
+        <dialog class="popup" id="loading-failure-popup">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Load Failed">
+                <p>Failed to load user data</p>
+                <button class="close-popup-button" id="close-loading-failure-popup-btn">Close</button>
+            </div>
+        </dialog>
+        <dialog class="popup" id="success-or-failure-popup" closedby="any">
+            <div class="container">
+                <p></p>
+                <button class="close-popup-btn" id="close-success-or-failure-popup-btn">Close</button>
+            </div>
+        </dialog>
     </main>
-    <script src="script.js"></script>
+    <script src="edit-user-script.js"></script>
 </body>
 </html>

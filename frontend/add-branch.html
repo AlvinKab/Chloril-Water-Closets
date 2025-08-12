@@ -4,37 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="Chloril Water Closets logo.png">
     <title>New Branch</title>
 </head>
 <body>
     <main>
-        <form method="post">
+        <form method="post" id="add-branch-form">
             <fieldset class="add-branch-container">
                 <legend>Add New Branch</legend>
                 <fieldset class="add-branch-section">
-                    <legend>Branch Name [[NOTE: The branch name cannot be changed later]]</legend>
-                    <input type="text">
+                    <legend>Branch Name <span class="mandatory">*</span> [[NOTE: The branch name cannot be changed later]]</legend>
+                    <input type="text" name="branch-name" required>
                 </fieldset>
                 <fieldset class="add-branch-section">
                     <legend>Men's Toilet Details</legend>
-                    <label for="stalls">Number of Stalls</label>
-                    <input type="number" name="stalls">
-                    <label for="urinals">Number of Urinals</label>
-                    <input type="number" name="urinals">
-                    <label for="sinks">Number of Sinks</label>
-                    <input type="number" name="sinks">
+                    <label for="stalls">Number of Stalls <span class="mandatory">*</span></label>
+                    <input type="number" name="men-stalls" required min=0>
+                    <label for="urinals">Number of Urinals <span class="mandatory">*</span></label>
+                    <input type="number" name="men-urinals" required min=0>
+                    <label for="sinks">Number of Sinks <span class="mandatory">*</span></label>
+                    <input type="number" name="men-sinks" required min=0>
                 </fieldset>
                 <fieldset class="add-branch-section">
                     <legend>Women's Toilet Details</legend>
-                    <label for="stalls">Number of Stalls</label>
-                    <input type="number" name="stalls">
-                    <label for="sinks">Number of Sinks</label>
-                    <input type="number" name="sinks">
+                    <label for="stalls">Number of Stalls <span class="mandatory">*</span></label>
+                    <input type="number" name="women-stalls" required min=0>
+                    <label for="sinks">Number of Sinks <span class="mandatory">*</span></label>
+                    <input type="number" name="women-sinks" required min=0>
                 </fieldset>
                 <button type="submit" class="submit-btn">Add Branch</button>
             </fieldset>
         </form>
+        <dialog class="popup" id="login-warning-popup" closedby="any">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Access Denied">
+                <p>Log in as a management worker to view this page.</p>
+                <button class="close-popup-btn" id="close-login-popup-btn">Close</button>
+            </div>
+        </dialog>
+        <dialog class="popup" id="success-or-failure-popup" closedby="any">
+            <div class="container">
+                <p></p>
+                <button class="close-popup-btn" id="close-success-or-failure-popup-btn">Close</button>
+            </div>
+        </dialog>
     </main>
-    <script src="script.js"></script>
+    <script src="add-branch-script.js"></script>
 </body>
 </html>

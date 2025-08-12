@@ -12,8 +12,9 @@ router.get('/total-urinals', authenticateJWT, authRoles("Admin", "Manager"), toi
 router.get('/total-men-sinks', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getTotalMenSinkNo);
 router.get('/total-women-sinks', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getTotalWomenSinkNo);
 router.get('/total-sinks', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getTotalSinkNo);
-router.get('/:id', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getOneToilet);
+router.get('/:name', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getOneToilet);
 router.get('/', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getAllToilets);
-router.put('/:id', authenticateJWT, authRoles("Admin", "Manager"), toiletController.updateToilet);
+router.put('/:name/men', authenticateJWT, authRoles("Admin", "Manager"), toiletController.updateMenToilet);
+router.put('/:name/women', authenticateJWT, authRoles("Admin", "Manager"), toiletController.updateWomenToilet);
 
 export default router;

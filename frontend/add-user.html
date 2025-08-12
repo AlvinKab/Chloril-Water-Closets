@@ -4,30 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="Chloril Water Closets logo.png">
     <title>Add User</title>
 </head>
 <body>
     <main>
-        <form method="post" class="login-form">
+        <form method="post" class="login-form" id="add-user-form">
             <fieldset>
                 <legend>Add User</legend>
-                <label for="user">Username</label>
-                <input type="text" name="user">
-                <label for="email">Email</label>
-                <input type="email" name="email">
-                <label for="role">Role</label>
+                <label for="user">Username <span class="mandatory">*</span></label>
+                <input type="text" name="user" required>
+                <label for="email">Email <span class="mandatory">*</span></label>
+                <input type="email" name="email" required>
+                <label for="role">Role <span class="mandatory">*</span></label>
                 <select name="role" id="roles">
-                    <option value="manager">Manager</option>
-                    <option value="admin">Administrator</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Admin">Administrator</option>
                 </select>
-                <label for="pass">Password</label>
-                <input type="password" name="pass">
-                <label for="confirm-pass">Confirm Password</label>
-                <input type="password" name="confirm-pass">
-                <button type="submit" class="login-btn">Log In</button>
+                <label for="pass" id="pass-label" title="Allowed characters are A-Za-z0-9~`!@#$%^&*()_+-={}|[]:;'<>?,./ and password must have at least 8 characters.">Password <span class="mandatory">*</span> [[Hover for details]]</label>
+                <input type="password" required name="pass" id="pass" pattern="[A-Za-z0-9~!@#$%^&*\(\)_+`\-=\{\}\|\[\]:;'<>?,.\/]{8,}">
+                <label for="confirm-pass" id="confirm-pass-label">Confirm Password <span class="mandatory">*</span></label>
+                <input type="password" required name="confirm-pass" id="confirm-pass">
+                <button type="submit" class="login-btn">Add User</button>
             </fieldset>
         </form>
+        <dialog class="popup" id="login-warning-popup" closedby="any">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Access Denied">
+                <p>You do not have permission to view this page.</p>
+                <button class="close-popup-btn" id="close-login-popup-btn">Close</button>
+            </div>
+        </dialog>
+        <dialog class="popup" id="success-or-failure-popup" closedby="any">
+            <div class="container">
+                <p></p>
+                <button class="close-popup-btn" id="close-success-or-failure-popup-btn">Close</button>
+            </div>
+        </dialog>
     </main>
-    <script src="script.js"></script>
+    <script src="add-user-script.js"></script>
 </body>
 </html>

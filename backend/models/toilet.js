@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { type } from 'os';
 
 const toiletSchema = new Schema({
     branchName: {
@@ -26,7 +27,10 @@ const toiletSchema = new Schema({
             default: "Good"
         }
     },
-    menToiletStallStatusDetails: ["All Good", "All Good", "All Good"],
+    menToiletStallStatusDetails: {
+        type: [String],
+        default: ["All Good", "All Good", "All Good"]
+    },
     menToiletUrinalNo: Number,
     menToiletUrinalStatus: {
         urinalStatus: {
@@ -35,7 +39,10 @@ const toiletSchema = new Schema({
             default: "Good"
         }
     },
-    menToiletUrinalStatusDetails: ["All Good"],
+    menToiletUrinalStatusDetails: {
+        type: [String],
+        default: ["All Good"]
+    },
     menToiletSinkNo: Number,
     menToiletSinkStatus: {
         tapAndDrainStatus: {
@@ -54,7 +61,10 @@ const toiletSchema = new Schema({
             default: "Good"
         }
     },
-    menToiletSinkStatusDetails: ["All Good", "All Good", "All Good"],
+    menToiletSinkStatusDetails: {
+        type: [String],
+        default: ["All Good", "All Good", "All Good"]
+    },
     womenToiletStallNo: Number,
     womenToiletStallStatus: {
         bowlAndCisternStatus: {
@@ -73,7 +83,10 @@ const toiletSchema = new Schema({
             default: "Good"
         }
     },
-    womenToiletStallStatusDetails: ["All Good", "All Good", "All Good"],
+    womenToiletStallStatusDetails: {
+        type: [String],
+        default: ["All Good", "All Good", "All Good"]
+    },
     womenToiletSinkNo: Number,
     womenToiletSinkStatus: {
         tapAndDrainStatus: {
@@ -92,7 +105,10 @@ const toiletSchema = new Schema({
             default: "Good"
         }
     },
-    womenToiletSinkStatusDetails: ["All Good", "All Good", "All Good"]
+    womenToiletSinkStatusDetails: {
+        type: [String],
+        default: ["All Good", "All Good", "All Good"]
+    }
 }, {timestamps: true});
 
 export default model('toilet', toiletSchema);

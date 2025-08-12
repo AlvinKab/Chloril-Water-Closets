@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="Chloril Water Closets logo.png">
     <title>Users</title>
 </head>
 <body>
     <header>
         <nav>
-            <a href="home.html">Log Out</a>
+            <a onclick="logout()">Log Out</a>
+            <a href="view-branches.html">Branches</a>
+            <a href="change-password.html">Change Password</a>
         </nav>
     </header>
     <main>
@@ -19,15 +22,45 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Edit User Details</th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="users-tbody">
                 
             </tbody>
         </table>
         <button type="submit" class="add-btn"><a href="add-user.html">Add User</a></button>
+        <dialog class="popup" id="login-warning-popup" closedby="any">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Access Denied">
+                <p>You do not have permission to view this page.</p>
+                <button class="close-popup-btn" id="close-login-popup-btn">Close</button>
+            </div>
+        </dialog>
+        <dialog class="popup" id="error-popup" closedby="any">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Load Failed">
+                <p>Failed to load users.</p>
+                <button class="close-popup-btn" id="close-error-popup-btn">Close</button>
+            </div>
+        </dialog>
+        <dialog class="popup" id="delete-warning-popup" closedby="any">
+            <div class="container">
+                <img src="custom-warning-icon.png" alt="Warning">
+                <p>Are you sure you want to delete this user?</p>
+                <div class="popup-button-container">
+                    <button class="confirm-btn" id="confirm-btn">Yes</button>
+                    <button class="cancel-btn" id="cancel-btn">Cancel</button>
+                </div>
+            </div>
+        </dialog>
+        <dialog class="popup" id="success-or-failure-popup" closedby="any">
+            <div class="container">
+                <p></p>
+                <button class="close-popup-btn" id="close-success-or-failure-popup-btn">Close</button>
+            </div>
+        </dialog>
     </main>
-    <script src="script.js"></script>
+    <script src="view-users-script.js"></script>
 </body>
 </html>

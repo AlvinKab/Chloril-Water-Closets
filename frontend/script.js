@@ -1,7 +1,11 @@
-const popup = document.getElementById("warning-container");
-const btn = document.getElementById("close-popup-btn");
-const closePopup = () => {popup.style.display = 'none';}
+document.addEventListener('DOMContentLoaded', async () => {
+    function checkUserLoggedIn() {
+        return localStorage.getItem('token') !== null;
+    }
 
-if (popup && btn) {
-    btn.addEventListener("click", closePopup);
-}
+    const isLoggedIn = checkUserLoggedIn();
+
+    if (isLoggedIn) {
+        window.location.replace('view-branches.html');
+    }
+});

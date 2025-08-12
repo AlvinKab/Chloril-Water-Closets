@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="Chloril Water Closets logo.png">
     <title>Log In</title>
 </head>
 <body>
     <main>
-        <form method="post" class="login-form">
+        <form method="post" class="login-form" id="login-form" autocomplete="on">
             <fieldset>
                 <legend>Log In</legend>
                 <label for="user">Username</label>
@@ -18,7 +19,14 @@
                 <button type="submit" class="login-btn">Log In</button>
             </fieldset>
         </form>
+        <dialog class="popup" id="invalid-warning-popup" closedby="any">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Access Denied">
+                <p>Invalid credentials.</p>
+                <button class="close-popup-btn" id="close-popup-btn">Close</button>
+            </div>
+        </dialog>
     </main>
-    <script src="script.js"></script>
+    <script src="login-script.js"></script>
 </body>
 </html>
