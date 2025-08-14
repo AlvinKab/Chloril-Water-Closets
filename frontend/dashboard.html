@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="Chloril Water Closets logo.png">
+    <title>Dashboard</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a onclick="logout()">Log Out</a>
+            <a href="view-branches.html">Branches</a>
+            <a href="view-users.html" id="link-to-users">Users</a>
+            <a href="change-password.html">Change Password</a>
+        </nav>
+    </header>
+    <main style="padding: 0 20px 0;">
+        <details name="data" class="totals-container">
+            <summary>Totals</summary>
+            <p class="total-revenue" id="total-revenue"></p>
+            <p class="total-budget" id="total-budget"></p>
+        </details>
+        <details name="data" class="chart-container finances">
+            <summary>Finances</summary>
+            <div class="chart"><h2>Revenue by Branch</h2><canvas id="revenue-column"></canvas></div>
+            <div class="chart"><h2>Budget by Branch</h2><canvas id="budget-column"></canvas></div>
+        </details>
+        <details name="data" class="chart-container numbers">
+            <summary>Numbers</summary>
+            <div class="chart">
+                <h2>
+                    Number of Stalls by Branch
+                </h2>
+                <canvas id="stall-no-column">
+                </canvas>
+            </div>
+            <div class="chart">
+                <h2>
+                    Number of Urinals by Branch
+                </h2>
+                <canvas id="urinal-no-column">
+                </canvas>
+            </div>
+            <div class="chart">
+                <h2>
+                    Number of Sinks by Branch
+                </h2>
+                <canvas id="sink-no-column">
+                </canvas>
+            </div>
+        </details>
+        <details name="data" class="chart-container states">
+            <summary>State of components</summary>
+            <div class="chart">
+                <canvas id="bowl-and-cistern-pie"></canvas>
+            </div>
+            <div class="chart">
+                <canvas id="bidet-pie"></canvas>
+            </div>
+            <div class="chart">
+                <canvas id="toilet-paper-pie"></canvas>
+            </div>
+            <div class="chart">
+                <canvas id="urinal-pie"></canvas>
+            </div>
+            <div class="chart">
+                <canvas id="tap-and-drain-pie"></canvas>
+            </div>
+            <div class="chart">
+                <canvas id="soap-pie"></canvas>
+            </div>
+            <div class="chart">
+                <canvas id="paper-towel-pie"></canvas>
+            </div>
+        </details>
+        <details name="data" class="report-link">
+            <summary>Report</summary>
+            <a href="report.html" target="_blank">View Report</a>
+        </details>
+        <dialog class="popup" id="login-warning-popup" closedby="any">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Access Denied">
+                <p>Log in as a management worker to view this page.</p>
+                <button class="close-popup-btn" id="close-login-popup-btn">Close</button>
+            </div>
+        </dialog>
+        <dialog class="popup" id="loading-failure-popup" closedby="any">
+            <div class="container">
+                <img src="custom-failure-icon.png" alt="Load Failed">
+                <p>Failed to load data.</p>
+                <button class="close-popup-btn" id="close-loading-failure-popup-btn">Close</button>
+            </div>
+        </dialog>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            function logout() {
+                localStorage.removeItem('token');
+                window.location.href = 'home.html';
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                const adminRole = localStorage.getItem('role') === "Admin";
+
+                if (!adminRole) {
+                    document.getElementById('link-to-users').style = 'display: none;';
+                }
+
+                if (!token) {
+                    const loginPopup = document.getElementById('login-warning-popup');
+                    const closeLoginBtn = document.getElementById('close-login-popup-btn');
+                    loginPopup.showModal();
+                    closeLoginBtn.addEventListener('click', () => {loginPopup.close();});
+                    loginPopup.addEventListener('close', () => {window.location.replace('home.html');});
+                    return;
+                }
+
+                const revenueField = document.getElementById('total-revenue');
+                const budgetField = document.getElementById('total-budget');
+                const revenueByBranch = document.getElementById('revenue-column');
+                const budgetByBranch = document.getElementById('budget-column');
+                const stallNoByBranch = document.getElementById('stall-no-column');
+                const urinalNoByBranch = document.getElementById('urinal-no-column');
+                const sinkNoByBranch = document.getElementById('sink-no-column');
+                const bowlAndCisternStatusRatio = document.getElementById('bowl-and-cistern-pie');
+                const bidetStatusRatio = document.getElementById('bidet-pie');
+                const toiletPaperStatusRatio = document.getElementById('toilet-paper-pie');
+                const urinalStatusRatio = document.getElementById('urinal-pie');
+                const tapAndDrainStatusRatio = document.getElementById('tap-and-drain-pie');
+                const soapStatusRatio = document.getElementById('soap-pie');
+                const paperTowelStatusRatio = document.getElementById('paper-towel-pie');
+
+                const resTotalRevenue = await fetch('http://localhost:7800/api/branches/total-revenue', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resTotalRevenue.ok) {
+                    const total = await resTotalRevenue.json();
+                    revenueField.textContent = `Total Revenue: ${total[0].totalRevenue}`;
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resTotalBudget = await fetch('http://localhost:7800/api/branches/total-budget', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resTotalBudget.ok) {
+                    const total = await resTotalBudget.json();
+                    budgetField.textContent = `Total Budget: ${total[0].totalBudget}`;
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resRevenueByBranch = await fetch('http://localhost:7800/api/branches/', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resRevenueByBranch.ok) {
+                    const data = await resRevenueByBranch.json();
+                    const branches = data.map(branch => branch.branchName);
+                    const revenue = data.map(branch => branch.branchRevenue);
+
+                    new Chart(revenueByBranch, {
+                        type: 'bar',
+                        data: {
+                            labels: branches,
+                            datasets: [{
+                                label: "Revenue by Branch",
+                                backgroundColor: 'green',
+                                data: revenue
+                            }]
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resBudgetByBranch = await fetch('http://localhost:7800/api/branches/', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resBudgetByBranch.ok) {
+                    const data = await resBudgetByBranch.json();
+                    const branches = data.map(branch => branch.branchName);
+                    const budget = data.map(branch => branch.branchBudget);
+
+                    new Chart(budgetByBranch, {
+                        type: 'bar',
+                        data: {
+                            labels: branches,
+                            datasets: [{
+                                label: "Budget by Branch",
+                                backgroundColor: 'red',
+                                data: budget
+                            }]
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resStallNoByBranch = await fetch('http://localhost:7800/api/toilets/', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resStallNoByBranch.ok) {
+                    const data = await resStallNoByBranch.json();
+                    const branches = data.map(toilet => toilet.branchName);
+                    const menStallNo = data.map(toilet => toilet.menToiletStallNo);
+                    const womenStallNo = data.map(toilet => toilet.womenToiletStallNo);
+
+                    new Chart(stallNoByBranch, {
+                        type: 'bar',
+                        data: {
+                            labels: branches,
+                            datasets: [{
+                                label: 'Men',
+                                backgroundColor: 'blue',
+                                data: menStallNo
+                            },
+                            {
+                                label: 'Women',
+                                backgroundColor: 'pink',
+                                data: womenStallNo
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {
+                                    stacked: true
+                                },
+                                y: {
+                                    stacked: true
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resUrinalNoByBranch = await fetch('http://localhost:7800/api/toilets/', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resUrinalNoByBranch.ok) {
+                    const data = await resUrinalNoByBranch.json();
+                    const branches = data.map(toilet => toilet.branchName);
+                    const menUrinalNo = data.map(toilet => toilet.menToiletUrinalNo);
+
+                    new Chart(urinalNoByBranch, {
+                        type: 'bar',
+                        data: {
+                            labels: branches,
+                            datasets: [{
+                                label: 'Men',
+                                backgroundColor: 'blue',
+                                data: menUrinalNo
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resSinkNoByBranch = await fetch('http://localhost:7800/api/toilets/', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resSinkNoByBranch.ok) {
+                    const data = await resSinkNoByBranch.json();
+                    const branches = data.map(toilet => toilet.branchName);
+                    const menSinkNo = data.map(toilet => toilet.menToiletSinkNo);
+                    const womenSinkNo = data.map(toilet => toilet.womenToiletSinkNo);
+
+                    new Chart(sinkNoByBranch, {
+                        type: 'bar',
+                        data: {
+                            labels: branches,
+                            datasets: [{
+                                label: 'Men',
+                                backgroundColor: 'blue',
+                                data: menSinkNo
+                            },
+                            {
+                                label: 'Women',
+                                backgroundColor: 'pink',
+                                data: womenSinkNo
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {
+                                    stacked: true
+                                },
+                                y: {
+                                    stacked: true
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resBowlAndCisternStatusCount = await fetch('http://localhost:7800/api/toilets/count-bowl-and-cistern-status', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resBowlAndCisternStatusCount.ok) {
+                    const data = await resBowlAndCisternStatusCount.json();
+                    const statuses = data.map(status => {
+                        if (status._id === "Good") {
+                            return "All good";
+                        } else if (status._id === "Acceptable") {
+                            return "Minor repairs needed";
+                        } else if (status._id === "Bad") {
+                            return "Major repairs needed"
+                        } else if (status._id === "Critical") {
+                            return "Replacement needed"
+                        }
+                    });
+                    const counts = data.map(status => status.bowlAndCisternStatusCount);
+
+                    new Chart(bowlAndCisternStatusRatio, {
+                        type: 'pie',
+                        data: {
+                            labels: statuses,
+                            datasets: [{
+                                data: counts
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Bowls and Cisterns'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resBidetStatusCount = await fetch('http://localhost:7800/api/toilets/count-bidet-status', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resBidetStatusCount.ok) {
+                    const data = await resBidetStatusCount.json();
+                    const statuses = data.map(status => {
+                        if (status._id === "Good") {
+                            return "All good";
+                        } else if (status._id === "Acceptable") {
+                            return "Minor repairs needed";
+                        } else if (status._id === "Bad") {
+                            return "Major repairs needed"
+                        } else if (status._id === "Critical") {
+                            return "Replacement needed"
+                        }
+                    });
+                    const counts = data.map(status => status.bidetStatusCount);
+
+                    new Chart(bidetStatusRatio, {
+                        type: 'pie',
+                        data: {
+                            labels: statuses,
+                            datasets: [{
+                                data: counts
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Bidets'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resToiletPaperStatusCount = await fetch('http://localhost:7800/api/toilets/count-toilet-paper-status', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resToiletPaperStatusCount.ok) {
+                    const data = await resToiletPaperStatusCount.json();
+                    const statuses = data.map(status => {
+                        if (status._id === "Good") {
+                            return "Full";
+                        } else if (status._id === "Acceptable") {
+                            return "Slightly used";
+                        } else if (status._id === "Bad") {
+                            return "Almost empty"
+                        } else if (status._id === "Critical") {
+                            return "Empty"
+                        }
+                    });
+                    const counts = data.map(status => status.toiletPaperStatusCount);
+
+                    new Chart(toiletPaperStatusRatio, {
+                        type: 'pie',
+                        data: {
+                            labels: statuses,
+                            datasets: [{
+                                data: counts
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Toilet Paper'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resUrinalStatusCount = await fetch('http://localhost:7800/api/toilets/count-urinal-status', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resUrinalStatusCount.ok) {
+                    const data = await resUrinalStatusCount.json();
+                    const statuses = data.map(status => {
+                        if (status._id === "Good") {
+                            return "All good";
+                        } else if (status._id === "Acceptable") {
+                            return "Minor repairs needed";
+                        } else if (status._id === "Bad") {
+                            return "Major repairs needed"
+                        } else if (status._id === "Critical") {
+                            return "Replacement needed"
+                        }
+                    });
+                    const counts = data.map(status => status.urinalStatusCount);
+
+                    new Chart(urinalStatusRatio, {
+                        type: 'pie',
+                        data: {
+                            labels: statuses,
+                            datasets: [{
+                                data: counts
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Urinals'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resTapAndDrainStatusCount = await fetch('http://localhost:7800/api/toilets/count-tap-and-drain-status', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resTapAndDrainStatusCount.ok) {
+                    const data = await resTapAndDrainStatusCount.json();
+                    const statuses = data.map(status => {
+                        if (status._id === "Good") {
+                            return "All good";
+                        } else if (status._id === "Acceptable") {
+                            return "Minor repairs needed";
+                        } else if (status._id === "Bad") {
+                            return "Major repairs needed"
+                        } else if (status._id === "Critical") {
+                            return "Replacement needed"
+                        }
+                    });
+                    const counts = data.map(status => status.tapAndDrainStatusCount);
+
+                    new Chart(tapAndDrainStatusRatio, {
+                        type: 'pie',
+                        data: {
+                            labels: statuses,
+                            datasets: [{
+                                data: counts
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Taps and Drains'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resSoapStatusCount = await fetch('http://localhost:7800/api/toilets/count-soap-status', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resSoapStatusCount.ok) {
+                    const data = await resSoapStatusCount.json();
+                    const statuses = data.map(status => {
+                        if (status._id === "Good") {
+                            return "Full";
+                        } else if (status._id === "Acceptable") {
+                            return "Slightly used";
+                        } else if (status._id === "Bad") {
+                            return "Almost empty"
+                        } else if (status._id === "Critical") {
+                            return "Empty"
+                        }
+                    });
+                    const counts = data.map(status => status.soapStatusCount);
+
+                    new Chart(soapStatusRatio, {
+                        type: 'pie',
+                        data: {
+                            labels: statuses,
+                            datasets: [{
+                                data: counts
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Soap'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+
+                const resPaperTowelStatusCount = await fetch('http://localhost:7800/api/toilets/count-paper-towel-status', {
+                    'method': 'GET',
+                    'headers': {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (resPaperTowelStatusCount.ok) {
+                    const data = await resPaperTowelStatusCount.json();
+                    const statuses = data.map(status => {
+                        if (status._id === "Good") {
+                            return "Full";
+                        } else if (status._id === "Acceptable") {
+                            return "Slightly used";
+                        } else if (status._id === "Bad") {
+                            return "Almost empty"
+                        } else if (status._id === "Critical") {
+                            return "Empty"
+                        }
+                    });
+                    const counts = data.map(status => status.paperTowelStatusCount);
+
+                    new Chart(paperTowelStatusRatio, {
+                        type: 'pie',
+                        data: {
+                            labels: statuses,
+                            datasets: [{
+                                data: counts
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Paper Towels'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const loadFailurePopup = document.getElementById('loading-failure-popup');
+                    const closeLoadFailureBtn = document.getElementById('close-loading-failure-popup-btn');
+                    loadFailurePopup.showModal();
+                    closeLoadFailureBtn.addEventListener('click', () => {loadFailurePopup.close();});
+                    return;
+                }
+            } catch (err) {
+                console.log("Error: ", err);
+            }
+        });
+    </script>
+</body>
+</html>

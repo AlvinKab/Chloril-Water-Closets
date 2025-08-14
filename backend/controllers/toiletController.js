@@ -1,5 +1,4 @@
 import Toilet from '../models/toilet.js';
-import mongoose from 'mongoose';
 
 const getOneToilet = async (req, res) => {
     try {
@@ -284,4 +283,320 @@ const getTotalSinkNo = async (req, res) => {
     }    
 }
 
-export default { getOneToilet, getAllToilets, updateMenToilet, updateWomenToilet, getTotalMenStallNo, getTotalWomenStallNo, getTotalStallNo, getTotalUrinalNo, getTotalMenSinkNo, getTotalWomenSinkNo, getTotalSinkNo };
+const getBowlAndCisternStatusCount = async (req, res) => {
+    try {
+        const bowlAndCisternStatusCount = await Toilet.aggregate([
+            {
+                $facet: {
+                    men: [
+                        {
+                            $group: {
+                                _id: "$menToiletStallStatus.bowlAndCisternStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ],
+                    women: [
+                        {
+                            $group: {
+                                _id: "$womenToiletStallStatus.bowlAndCisternStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    combined: { $concatArrays: ["$men", "$women"] }
+                }
+            },
+            { $unwind: "$combined" },
+            {
+                $group: {
+                    _id: "$combined._id",
+                    bowlAndCisternStatusCount: { $sum: "$combined.count" }
+                }
+            }
+        ]);
+        if (!bowlAndCisternStatusCount) {
+            return res.status(500).json({ message: "An error occurred when getting bowl and cistern status counts" });
+        }
+        return res.status(200).json(bowlAndCisternStatusCount);
+    } catch(err) {
+        res.status(500).json({ message: "An error occurred when fetching bowl and cistern status counts." });
+        console.error("Could not fetch bowl and cistern status count: ", err);
+    }
+}
+
+const getBidetStatusCount = async (req, res) => {
+    try {
+        const bidetStatusCount = await Toilet.aggregate([
+            {
+                $facet: {
+                    men: [
+                        {
+                            $group: {
+                                _id: "$menToiletStallStatus.bidetStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ],
+                    women: [
+                        {
+                            $group: {
+                                _id: "$womenToiletStallStatus.bidetStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    combined: { $concatArrays: ["$men", "$women"] }
+                }
+            },
+            { $unwind: "$combined" },
+            {
+                $group: {
+                    _id: "$combined._id",
+                    bidetStatusCount: { $sum: "$combined.count" }
+                }
+            }
+        ]);
+        if (!bidetStatusCount) {
+            return res.status(500).json({ message: "An error occurred when getting bidet status counts" });
+        }
+        return res.status(200).json(bidetStatusCount);
+    } catch(err) {
+        res.status(500).json({ message: "An error occurred when fetching bidet status counts." });
+        console.error("Could not fetch bidet status count: ", err);
+    }
+}
+
+const getToiletPaperStatusCount = async (req, res) => {
+    try {
+        const toiletPaperStatusCount = await Toilet.aggregate([
+            {
+                $facet: {
+                    men: [
+                        {
+                            $group: {
+                                _id: "$menToiletStallStatus.toiletPaperStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ],
+                    women: [
+                        {
+                            $group: {
+                                _id: "$womenToiletStallStatus.toiletPaperStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    combined: { $concatArrays: ["$men", "$women"] }
+                }
+            },
+            { $unwind: "$combined" },
+            {
+                $group: {
+                    _id: "$combined._id",
+                    toiletPaperStatusCount: { $sum: "$combined.count" }
+                }
+            }
+        ]);
+        if (!toiletPaperStatusCount) {
+            return res.status(500).json({ message: "An error occurred when getting toilet paper status counts" });
+        }
+        return res.status(200).json(toiletPaperStatusCount);
+    } catch(err) {
+        res.status(500).json({ message: "An error occurred when fetching toilet paper status counts." });
+        console.error("Could not fetch toilet paper status count: ", err);
+    }
+}
+
+
+const getUrinalStatusCount = async (req, res) => {
+    try {
+        const urinalStatusCount = await Toilet.aggregate([
+            {
+                $group: {
+                    _id: "$menToiletUrinalStatus.urinalStatus",
+                    urinalStatusCount: { $sum: 1 }
+                }
+            }
+        ]);
+        if (!urinalStatusCount) {
+            return res.status(500).json({ message: "An error occurred when getting urinal status count." });
+        }
+        return res.status(200).json(urinalStatusCount);
+    } catch(err) {
+        res.status(500).json({ message: "An error occurred when fetching urinal status count." });
+        console.error("Could not fetch urinal status: " + err);
+    }    
+}
+
+const getTapAndDrainStatusCount = async (req, res) => {
+    try {
+        const tapAndDrainStatusCount = await Toilet.aggregate([
+            {
+                $facet: {
+                    men: [
+                        {
+                            $group: {
+                                _id: "$menToiletSinkStatus.tapAndDrainStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ],
+                    women: [
+                        {
+                            $group: {
+                                _id: "$womenToiletSinkStatus.tapAndDrainStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    combined: { $concatArrays: ["$men", "$women"] }
+                }
+            },
+            { $unwind: "$combined" },
+            {
+                $group: {
+                    _id: "$combined._id",
+                    tapAndDrainStatusCount: { $sum: "$combined.count" }
+                }
+            }
+        ]);
+        if (!tapAndDrainStatusCount) {
+            return res.status(500).json({ message: "An error occurred when getting tap and drain status counts" });
+        }
+        return res.status(200).json(tapAndDrainStatusCount);
+    } catch(err) {
+        res.status(500).json({ message: "An error occurred when fetching tap and drain status counts." });
+        console.error("Could not fetch tap and drain status count: ", err);
+    }
+}
+
+const getSoapStatusCount = async (req, res) => {
+    try {
+        const soapStatusCount = await Toilet.aggregate([
+            {
+                $facet: {
+                    men: [
+                        {
+                            $group: {
+                                _id: "$menToiletSinkStatus.soapStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ],
+                    women: [
+                        {
+                            $group: {
+                                _id: "$womenToiletSinkStatus.soapStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    combined: { $concatArrays: ["$men", "$women"] }
+                }
+            },
+            { $unwind: "$combined" },
+            {
+                $group: {
+                    _id: "$combined._id",
+                    soapStatusCount: { $sum: "$combined.count" }
+                }
+            }
+        ]);
+        if (!soapStatusCount) {
+            return res.status(500).json({ message: "An error occurred when getting soap status counts" });
+        }
+        return res.status(200).json(soapStatusCount);
+    } catch(err) {
+        res.status(500).json({ message: "An error occurred when fetching soap status counts." });
+        console.error("Could not fetch soap status count: ", err);
+    }
+}
+
+const getPaperTowelStatusCount = async (req, res) => {
+    try {
+        const paperTowelStatusCount = await Toilet.aggregate([
+            {
+                $facet: {
+                    men: [
+                        {
+                            $group: {
+                                _id: "$menToiletSinkStatus.paperTowelStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ],
+                    women: [
+                        {
+                            $group: {
+                                _id: "$womenToiletSinkStatus.paperTowelStatus",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    combined: { $concatArrays: ["$men", "$women"] }
+                }
+            },
+            { $unwind: "$combined" },
+            {
+                $group: {
+                    _id: "$combined._id",
+                    paperTowelStatusCount: { $sum: "$combined.count" }
+                }
+            }
+        ]);
+        if (!paperTowelStatusCount) {
+            return res.status(500).json({ message: "An error occurred when getting paper towel status counts" });
+        }
+        return res.status(200).json(paperTowelStatusCount);
+    } catch(err) {
+        res.status(500).json({ message: "An error occurred when fetching paper towel status counts." });
+        console.error("Could not fetch paper towel status count: ", err);
+    }
+}
+
+export default {
+    getOneToilet,
+    getAllToilets,
+    updateMenToilet,
+    updateWomenToilet,
+    getTotalMenStallNo,
+    getTotalWomenStallNo,
+    getTotalStallNo,
+    getTotalUrinalNo,
+    getTotalMenSinkNo,
+    getTotalWomenSinkNo,
+    getTotalSinkNo,
+    getBowlAndCisternStatusCount,
+    getBidetStatusCount,
+    getToiletPaperStatusCount,
+    getUrinalStatusCount,
+    getTapAndDrainStatusCount,
+    getSoapStatusCount,
+    getPaperTowelStatusCount
+};

@@ -12,6 +12,13 @@ router.get('/total-urinals', authenticateJWT, authRoles("Admin", "Manager"), toi
 router.get('/total-men-sinks', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getTotalMenSinkNo);
 router.get('/total-women-sinks', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getTotalWomenSinkNo);
 router.get('/total-sinks', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getTotalSinkNo);
+router.get('/count-bowl-and-cistern-status', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getBowlAndCisternStatusCount);
+router.get('/count-bidet-status', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getBidetStatusCount);
+router.get('/count-toilet-paper-status', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getToiletPaperStatusCount);
+router.get('/count-urinal-status', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getUrinalStatusCount);
+router.get('/count-tap-and-drain-status', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getTapAndDrainStatusCount);
+router.get('/count-soap-status', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getSoapStatusCount);
+router.get('/count-paper-towel-status', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getPaperTowelStatusCount);
 router.get('/:name', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getOneToilet);
 router.get('/', authenticateJWT, authRoles("Admin", "Manager"), toiletController.getAllToilets);
 router.put('/:name/men', authenticateJWT, authRoles("Admin", "Manager"), toiletController.updateMenToilet);

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="Chloril Water Closets logo.png">
+    <title>Report</title>
+</head>
+<body class="report">
+    <img src="Chloril Water Closets drawing.png" alt="CWCDrawing" class="report-image">
+    <h1>Chloril Water Closets<br>General Report</h1>
+    <hr>
+    <article class="report-content" id="report-content"></article>
+    <dialog class="popup" id="login-warning-popup" closedby="any">
+        <div class="container">
+            <img src="custom-failure-icon.png" alt="Access Denied">
+            <p>Log in as a management worker to view this page.</p>
+            <button class="close-popup-btn" id="close-login-popup-btn">Close</button>
+        </div>
+    </dialog>
+    <dialog class="popup" id="loading-failure-popup" closedby="any">
+        <div class="container">
+            <img src="custom-failure-icon.png" alt="Load Failed">
+            <p>Failed to load data.</p>
+            <button class="close-popup-btn" id="close-loading-failure-popup-btn">Close</button>
+        </div>
+    </dialog>
+    <script src="report-script.js"></script>
+</body>
+</html>

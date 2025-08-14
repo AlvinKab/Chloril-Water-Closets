@@ -46,6 +46,7 @@ app.get('/branches/', (req, res) => {res.sendFile(path.join(__dirname, '../front
 app.get('/branches/update-revenue/:id', (req, res) => {res.sendFile(path.join(__dirname, '../frontend/view-branches.html'));});
 app.get('/branches/update-budget/:id', (req, res) => {res.sendFile(path.join(__dirname, '../frontend/view-branches.html'));});
 app.get('/branches/:id', (req, res) => {res.sendFile(path.join(__dirname, '../frontend/view-branches.html'));});
+app.get('/dashboard', (req, res) => {res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));});
 
 connectDB();
 
