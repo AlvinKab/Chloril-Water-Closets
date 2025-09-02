@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-                .then(res => {
+                .then(async res => {
                     const successOrFailurePopup = document.getElementById('success-or-failure-popup');
                     const closeSuccessOrFailureBtn = document.getElementById('close-success-or-failure-popup-btn');
                     const image = document.getElementById('icon');
@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const img = document.createElement('img');
                     img.id = 'icon';
                     if (res.ok) {
+                        deletePopup.close();
                         e.target.closest('tr').remove();
                         img.src = 'custom-success-icon.png';
                         img.alt = "Success";
@@ -131,7 +132,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         successOrFailurePopup.showModal();
                         closeSuccessOrFailureBtn.addEventListener('click', () => {successOrFailurePopup.close();});
                     } else {
-                        const error = res.json();
+                        deletePopup.close();
+                        error = await res.json();
                         img.src = 'custom-failure-icon.png';
                         img.alt = "Failure";
                         successOrFailurePopup.getElementsByClassName('container')[0].prepend(img);

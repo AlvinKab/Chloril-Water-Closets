@@ -272,6 +272,10 @@ const deleteUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
 
+        if (req.user?.id === id) {
+            return res.status(400).json({ message: 'You cannot delete your own account.' });
+        }
+
         const deletedUser = await User.deleteOne(user);
         if (!deletedUser) {
             return res.status(500).json({ message: 'An error occurred when deleting user!' });

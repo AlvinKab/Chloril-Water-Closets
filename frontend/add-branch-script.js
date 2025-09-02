@@ -20,11 +20,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const token = localStorage.getItem('token');
         const formData = new FormData(addBranchForm);
         const branchName = formData.get('branch-name');
-        const menStalls = formData.get('men-stalls');
-        const menUrinals = formData.get('men-urinals');
-        const menSinks = formData.get('men-sinks');
-        const womenStalls = formData.get('women-stalls');
-        const womenSinks = formData.get('women-sinks');
+        const menToiletStallNo = formData.get('men-stalls');
+        const menToiletUrinalNo = formData.get('men-urinals');
+        const menToiletSinkNo = formData.get('men-sinks');
+        const womenToiletStallNo = formData.get('women-stalls');
+        const womenToiletSinkNo = formData.get('women-sinks');
 
         try {
             const res = await fetch('http://localhost:7800/api/branches/', {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'Application/JSON'
                 },
-                'body': JSON.stringify({ branchName, menStalls, menUrinals, menSinks, womenStalls, womenSinks })
+                'body': JSON.stringify({ branchName, menToiletStallNo, menToiletUrinalNo, menToiletSinkNo, womenToiletStallNo, womenToiletSinkNo })
             });
 
             const successOrFailurePopup = document.getElementById('success-or-failure-popup');

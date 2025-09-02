@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 budgetInput.className = 'budget-field';
                 budgetInput.dataset.id = branch._id;
                 budgetInput.value = branch.branchBudget;
+                budgetInput.min = 0;
                 budgetTd.appendChild(budgetInput);
                 tr.appendChild(budgetTd);
 
@@ -128,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         async function handleUpdateRevenue(e) {
             const id = e.target.dataset.id;
-            const revenue = e.target.value;
+            const branchRevenue = e.target.value;
 
             const res = await fetch(`http://localhost:7800/api/branches/update-revenue/${id}`, {
                 'method': 'PUT',
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'Application/JSON'
                 },
-                'body': JSON.stringify({ revenue })
+                'body': JSON.stringify({ branchRevenue })
             });
 
             const successOrFailurePopup = document.getElementById('success-or-failure-popup');
@@ -159,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         async function handleUpdateBudget(e) {
             const id = e.target.dataset.id;
-            const budget = e.target.value;
+            const branchBudget = e.target.value;
 
             const res = await fetch(`http://localhost:7800/api/branches/update-budget/${id}`, {
                 'method': 'PUT',
@@ -167,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'Application/JSON'
                 },
-                'body': JSON.stringify({ budget })
+                'body': JSON.stringify({ branchBudget })
             });
 
             const successOrFailurePopup = document.getElementById('success-or-failure-popup');
@@ -203,7 +204,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-                .then(res => {
+                .then(async res => {
                     const successOrFailurePopup = document.getElementById('success-or-failure-popup');
                     const closeSuccessOrFailureBtn = document.getElementById('close-success-or-failure-popup-btn');
                     const image = document.getElementById('icon');
@@ -212,6 +213,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     img.id = 'icon';
 
                     if (res.ok) {
+                        deletePopup.close();
                         e.target.closest('tr').remove();
                         img.src = 'custom-success-icon.png';
                         img.alt = "Success";
@@ -220,7 +222,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         successOrFailurePopup.showModal();
                         closeSuccessOrFailureBtn.addEventListener('click', () => {successOrFailurePopup.close();});
                     } else {
-                        const error = res.json();
+                        deletePopup.close();
+                        const error = await res.json();
                         img.src = 'custom-failure-icon.png';
                         img.alt = "Failure";
                         successOrFailurePopup.getElementsByClassName('container')[0].prepend(img);

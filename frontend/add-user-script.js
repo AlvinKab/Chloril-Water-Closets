@@ -31,9 +31,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } else {
             e.target.style = 'border-color: red;';
+            document.getElementById('pass-label').style = 'color: red;';
             if (e.target.value.length < 8) {
-                document.getElementById('pass-label').style = 'color: red;';
                 document.getElementById('pass-label').textContent = "Password must have at least 8 characters.";
+            } else {
+                document.getElementById('pass-label').textContent = "Password contains invalid symbols.";
             }
         }
     });
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             img.id = 'icon';
 
             if (password !== confirmPassword) {
-                successOrFailurePopup.getElementsByTagName('p').textContent = "Passwords do not match";
+                successOrFailurePopup.getElementsByTagName('p')[0].textContent = "Passwords do not match";
                 successOrFailurePopup.showModal();
                 closeSuccessOrFailureBtn.addEventListener('click', () => {successOrFailurePopup.close();});
                 return;

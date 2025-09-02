@@ -144,14 +144,24 @@ const deleteBranch = async (req, res) => {
         }
 
         const branch = await Branch.findById(id).exec();
+        const toilet = await Toilet.findOne({ branchName: branch.branchName }).exec();
+        
         if (!branch) {
             return res.status(404).json({ message: "Could not find branch." });
         }
+
+        if (!toilet) {
+            return res.status(404).json({ message: "Could not fetch corresponding toilet info." });
+        }
         
         const deletedBranch = await Branch.deleteOne(branch);
+        const deletedToilet = await Toilet.deleteOne(toilet);
 
         if (!deletedBranch) {
             return res.status(500).json({ message: "An error occurred when deleting branch!" });
+        }
+        if (!deletedToilet) {
+            return res.status(500).json({ message: "An error occurred when deleting corresponding toilet." });
         }
         return res.status(200).json({ message: "Branch deleted successfully." });
     } catch(err) {

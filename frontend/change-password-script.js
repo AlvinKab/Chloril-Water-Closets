@@ -35,9 +35,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             } else {
                 e.target.style = 'border-color: red;';
+                document.getElementById('new-pass-label').style = 'color: red;';
                 if (e.target.value.length < 8) {
-                    document.getElementById('new-pass-label').style = 'color: red;';
                     document.getElementById('new-pass-label').textContent = "Password must have at least 8 characters.";
+                } else {
+                    document.getElementById('new-pass-label').textContent = "Password contains invalid symbols.";
                 }
             }
         });
@@ -138,9 +140,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             } else {
                 e.target.style = 'border-color: red;';
+                document.getElementById('new-pass-label').style = 'color: red;';
                 if (e.target.value.length < 8) {
-                    document.getElementById('new-pass-label').style = 'color: red;';
                     document.getElementById('new-pass-label').textContent = "Password must have at least 8 characters.";
+                } else {
+                    document.getElementById('new-pass-label').textContent = "Password contains invalid symbols.";
                 }
             }
         });
@@ -200,7 +204,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     successOrFailurePopup.getElementsByTagName('p')[0].textContent = `Password changed successfully.`;
                     successOrFailurePopup.showModal();
                     closeSuccessOrFailureBtn.addEventListener('click', () => {successOrFailurePopup.close();});
-                    successOrFailurePopup.addEventListener('close', () => {window.location.assign('view-users.html');});
+                    successOrFailurePopup.addEventListener('close', () => {history.back();});
                 } else {
                     const error = await res.json();
                     img.src = 'custom-failure-icon.png';

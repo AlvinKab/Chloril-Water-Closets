@@ -114,7 +114,7 @@ label {
     margin: 10px 0 10px;
 }
 
-label .mandatory {
+.mandatory {
     color: red;
 }
 
@@ -393,6 +393,14 @@ canvas {
 }
 
 @media screen and (max-aspect-ratio: 1/1) {
+    header {
+        height: 20vh;
+    }
+    
+    nav {
+        flex-direction: column;
+    }
+
     button {
         padding: 3.5px;
         width: 75px;
